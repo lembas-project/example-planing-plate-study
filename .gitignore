@@ -1,0 +1,16 @@
+# Lembas
+.lembas/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# IDE
+.idea/
+.vscode/
+
+# Case output
+cases/
+
+# Jupyter
+.ipynb_checkpoints/
