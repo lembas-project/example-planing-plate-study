@@ -20,10 +20,5 @@ planingfsi = "*"
 [local-plugins]
 plugin = "plugin.py"
 
-[tasks.report]
-cmd = "jupyter nbconvert --execute report.ipynb --to html"
-depends-on = ["run"]
-description = "Generate HTML report from analysis notebook"
-
 [study]
 cases = "cases.yaml"
