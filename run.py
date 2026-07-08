@@ -2,30 +2,98 @@
 
 from __future__ import annotations
 
-import numpy as np
+from itertools import product
+from pathlib import Path
+from typing import Any
+
+import toml
+import yaml
 
 from lembas import CaseList
 from lembas import load_local_plugins
 from lembas import registry
 
-# Load local plugins defined in [local-plugins] section of lembas.toml
-load_local_plugins()
-PlaningPlateCase = registry.get("PlaningPlateCase")
+
+def load_cases_from_manifest(manifest_path: Path | None = None) -> CaseList[Any]:
+    """Load case definitions from cases file referenced in lembas.toml.
+
+    The [study] section should have a `cases` key pointing to a YAML file:
+        [study]
+        cases = "cases.yaml"
+
+    Supports expansion strategies:
+    - "cartesian": Cartesian product of all parameter arrays
+    - "zip": Pair parameters by index (all arrays must have same length)
+    - "explicit": Single case with scalar parameter values
+    """
+    if manifest_path is None:
+        manifest_path = Path.cwd() / "lembas.toml"
+
+    manifest = toml.load(manifest_path)
+    study_config = manifest.get("study", {})
+    cases_file = study_config.get("cases")
+
+    if cases_file is None:
+        return CaseList()
+
+    cases_path = manifest_path.parent / cases_file
+    with cases_path.open() as f:
+        cases_config = yaml.safe_load(f) or []
+
+    cases: CaseList[Any] = CaseList()
+
+    for case_def in cases_config:
+        handler_name = case_def["handler"]
+        expansion = case_def.get("expansion", "cartesian")
+        parameters = case_def.get("parameters", {})
+
+        handler_cls = registry.get(handler_name)
+
+        if expansion == "cartesian":
+            # Cartesian product of all parameter arrays
+            param_names = list(parameters.keys())
+            param_values = [
+                v if isinstance(v, list) else [v] for v in parameters.values()
+            ]
+
+            for combo in product(*param_values):
+                params = dict(zip(param_names, combo))
+                cases.add(handler_cls(**params))
+
+        elif expansion == "zip":
+            # Pair by index - all arrays must have same length
+            param_names = list(parameters.keys())
+            param_values = list(parameters.values())
+            lengths = [len(v) if isinstance(v, list) else 1 for v in param_values]
+
+            if len(set(lengths)) > 1:
+                raise ValueError(
+                    f"All parameter arrays must have same length for 'zip' expansion. "
+                    f"Got lengths: {dict(zip(param_names, lengths))}"
+                )
+
+            param_values = [v if isinstance(v, list) else [v] for v in param_values]
+            for values in zip(*param_values):
+                params = dict(zip(param_names, values))
+                cases.add(handler_cls(**params))
+
+        elif expansion == "explicit":
+            # Single case with scalar values
+            cases.append(handler_cls(**parameters))
+
+        else:
+            raise ValueError(f"Unknown expansion strategy: {expansion}")
+
+    return cases
 
 
 def main() -> None:
     """Run the parametric sweep."""
-    # Define parameter ranges
-    froude_nums = np.arange(0.5, 2.5, 0.5)
-    angles_of_attack = np.arange(5.0, 15.1, 2.5)
+    # Load local plugins defined in [local-plugins] section of lembas.toml
+    load_local_plugins()
 
-    # Create case list and add parameter sweep
-    cases: CaseList[PlaningPlateCase] = CaseList()
-    cases.add_cases_by_parameter_sweep(
-        PlaningPlateCase,
-        froude_num=froude_nums,
-        angle_of_attack=angles_of_attack,
-    )
+    # Load cases from [[cases]] in lembas.toml
+    cases = load_cases_from_manifest()
 
     print(f"Running {len(cases)} cases...")
 
@@ -36,7 +104,7 @@ def main() -> None:
     print("\nResults summary:")
     for case in cases:
         print(
-            f"  Fr={case.froude_num:.2f}, AOA={case.angle_of_attack:.1f}°: "
+            f"  Fr={case.froude_num:.2f}, AOA={case.angle_of_attack:.1f}: "
             f"L={case.results.lift:.3f}, D={case.results.drag:.3f}"
         )
 

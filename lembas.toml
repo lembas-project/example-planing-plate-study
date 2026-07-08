@@ -11,6 +11,7 @@ python = ">=3.11"
 numpy = "*"
 pandas = "*"
 matplotlib = "*"
+pyyaml = "*"
 lembas = ">=0.1.1"
 planingfsi = "*"
 
@@ -27,3 +28,6 @@ run = "python run.py"
 cmd = "jupyter nbconvert --execute report.ipynb --to html"
 depends-on = ["run"]
 description = "Generate HTML report from analysis notebook"
+
+[study]
+cases = "cases.yaml"

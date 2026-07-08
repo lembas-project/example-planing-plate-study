@@ -1,0 +1,11 @@
+- handler: PlaningPlateCase
+  expansion: cartesian
+  parameters:
+    froude_num: [0.5, 1.0, 1.5, 2.0]
+    angle_of_attack: [5.0, 7.5, 10.0, 12.5, 15.0]
+
+- handler: PlaningPlateCase
+  expansion: zip
+  parameters:
+    froude_num: [2.5, 3.0]
+    angle_of_attack: [2.0, 3.0]
