@@ -11,8 +11,7 @@ python = ">=3.11"
 numpy = "*"
 pandas = "*"
 matplotlib = "*"
-pyyaml = "*"
-lembas = ">=0.1.1"
+lembas = ">=0.2.1"
 planingfsi = "*"
 
 [plugins]
@@ -20,9 +19,6 @@ planingfsi = "*"
 
 [local-plugins]
 plugin = "plugin.py"
-
-[tasks]
-run = "python run.py"
 
 [tasks.report]
 cmd = "jupyter nbconvert --execute report.ipynb --to html"
