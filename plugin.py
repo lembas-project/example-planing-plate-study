@@ -44,11 +44,11 @@ class PlaningPlateCase(Case):
     @step(condition=lambda self: not (self.case_dir / "configDict").exists())
     def create_input_files(self) -> None:
         """Create input files from base template."""
-        case_dir_base = Path.cwd() / "flat_plate_base"
+        case_dir_base = Path.cwd() / "case-template"
         if not case_dir_base.exists():
             raise FileNotFoundError(
                 f"Base case directory not found: {case_dir_base}. "
-                "Copy flat_plate_base from planingfsi examples."
+                "Copy case-template from planingfsi examples."
             )
         shutil.copytree(case_dir_base, self.case_dir, dirs_exist_ok=True)
         with (self.case_dir / "configDict").open("w") as fp:
