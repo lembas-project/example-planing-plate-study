@@ -11,9 +11,14 @@ python = ">=3.11"
 numpy = "*"
 pandas = "*"
 matplotlib = "*"
+lembas = ">=0.1.1"
+planingfsi = "*"
 
 [plugins]
-lembas-planingfsi = ">=0.1.0"
+# lembas-planingfsi = ">=0.1.0"
+
+[local-plugins]
+plugin = "plugin.py"
 
 [tasks]
 run = "python run.py"

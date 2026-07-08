@@ -5,7 +5,12 @@ from __future__ import annotations
 import numpy as np
 
 from lembas import CaseList
-from lembas_planingfsi import PlaningPlateCase
+from lembas import load_local_plugins
+from lembas import registry
+
+# Load local plugins defined in [local-plugins] section of lembas.toml
+load_local_plugins()
+PlaningPlateCase = registry.get("PlaningPlateCase")
 
 
 def main() -> None:
