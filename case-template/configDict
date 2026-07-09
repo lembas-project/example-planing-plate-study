@@ -4,9 +4,8 @@ g     : 9.81
 nu    : 1.0048e-6
 hWL   : 0.0
 
-Fr    : 0.5
-AOA   : 10.0
-#U : 5.0
+Fr    : {{ froude_num }}
+AOA   : {{ angle_of_attack }}
 Lc    : 1.0
 
 wettedLengthSolver : 'broyden'

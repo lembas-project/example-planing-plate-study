@@ -12,6 +12,7 @@ numpy = "*"
 pandas = "*"
 matplotlib = "*"
 lembas = ">=0.3.0"
+jinja2 = "*"
 planingfsi = "*"
 
 [plugins]
