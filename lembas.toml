@@ -11,7 +11,7 @@ python = ">=3.11"
 numpy = "*"
 pandas = "*"
 matplotlib = "*"
-lembas = ">=0.2.2"
+lembas = ">=0.3.0"
 planingfsi = "*"
 
 [plugins]
