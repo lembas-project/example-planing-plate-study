@@ -28,8 +28,12 @@ class PlaningPlateCase(Case):
     Characterized by Froude number (flow speed) and angle of attack.
     """
 
-    froude_num = InputParameter(type=float, min=0.2, max=3.0, short_name="Fr")
-    angle_of_attack = InputParameter(type=float, min=-5.0, max=20.0, short_name="AOA")
+    froude_num = InputParameter(
+        type=float, min=0.2, max=3.0, short_name="Fr", path_format="0.2f"
+    )
+    angle_of_attack = InputParameter(
+        type=float, min=-5.0, max=20.0, short_name="AOA", path_format="0.2f"
+    )
 
     # @property
     # def case_dir(self) -> Path:
