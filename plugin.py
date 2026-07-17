@@ -1,7 +1,6 @@
 """Planing flat plate case handler for planingfsi simulations."""
 
 from __future__ import annotations
-
 import shutil
 import subprocess
 from pathlib import Path
@@ -34,15 +33,6 @@ class PlaningPlateCase(Case):
     angle_of_attack = InputParameter(
         type=float, min=-5.0, max=20.0, short_name="AOA", path_format="0.2f"
     )
-
-    # @property
-    # def case_dir(self) -> Path:
-    #     """The directory in which to run the case."""
-    #     return Path(
-    #         Path.cwd(),
-    #         "cases",
-    #         f"Fr={self.froude_num:0.2f}_AOA={self.angle_of_attack:0.2f}",
-    #     )
 
     @step(condition=lambda self: not (self.case_dir / "configDict").exists())
     def create_input_files(self) -> None:
