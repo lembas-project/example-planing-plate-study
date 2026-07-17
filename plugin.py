@@ -7,10 +7,6 @@ import subprocess
 from pathlib import Path
 from typing import NamedTuple
 
-from jinja2 import Environment
-from jinja2 import FileSystemLoader
-from planingfsi.dictionary import load_dict_from_file
-
 from lembas import Case
 from lembas import InputParameter
 from lembas import result
@@ -47,6 +43,9 @@ class PlaningPlateCase(Case):
     @step(condition=lambda self: not (self.case_dir / "configDict").exists())
     def create_input_files(self) -> None:
         """Create input files from Jinja2 template."""
+        from jinja2 import Environment
+        from jinja2 import FileSystemLoader
+
         template_dir = Path.cwd() / "case-template"
         if not template_dir.exists():
             raise FileNotFoundError(
@@ -79,6 +78,8 @@ class PlaningPlateCase(Case):
     @result("drag", "lift", "moment")
     def forces(self) -> PlaningPlateResults:
         """Load force results from simulation output."""
+        from planingfsi.dictionary import load_dict_from_file
+
         results_dirs = sorted(
             self.case_dir.glob("[0-9]*"),
             key=lambda d: int(d.name),
