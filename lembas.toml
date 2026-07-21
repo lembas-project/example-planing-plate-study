@@ -11,9 +11,11 @@ python = ">=3.11"
 numpy = "*"
 pandas = "*"
 matplotlib = "*"
-lembas = ">=0.4.0"
 jinja2 = "*"
 planingfsi = "*"
+
+[pypi-dependencies]
+lembas = {path = "../../lembas-core", editable = true}
 
 [plugins]
 # lembas-planingfsi = ">=0.1.0"
@@ -23,3 +25,7 @@ plugin = "plugin.py"
 
 [study]
 cases = "cases.yaml"
+
+[platform]
+server = "https://lembas.fly.dev"
+project = 1
