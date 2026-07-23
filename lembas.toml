@@ -26,6 +26,10 @@ plugin = "plugin.py"
 [study]
 cases = "cases.yaml"
 
-[platform]
-server = "https://lembas.fly.dev"
-project = 1
+[[platform]]
+name = "production"
+url = "https://lembas.fly.dev"
+
+[[platform]]
+name = "local"
+url = "http://localhost:8001"
